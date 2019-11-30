@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from "gatsby"
+import { navigate } from "gatsby"
 import styled from 'styled-components'
 
 const Btn = styled.div({
@@ -10,24 +10,22 @@ const Btn = styled.div({
   color: `#fff`,
   backgroundColor: `#192a56`,
   cursor: `pointer`,
-  textAlign: `center`
+  textAlign: `center`,
 })
 
 class PrimaryButton extends React.Component {
+  onClick = () => {
+    const { to, onClick } = this.props
+    if (onClick && typeof onClick === `function`) {
+      onClick()
+    } else {
+      navigate(to)
+    }
+  }
   render() {
-    const { children, to } = this.props
+    const { children } = this.props
     return (
-      <Btn>
-        <Link
-          to={to}
-          style={{
-            textDecoration: `none`,
-            color: `#fff`
-          }}
-        >
-          {children}
-        </Link>
-      </Btn>
+      <Btn onClick={this.onClick}>{children}</Btn>
     )
   }
 }

@@ -2,6 +2,19 @@
 
 .container {
   padding: 10px;
+
+  #placeName {
+    font-weight: 300;
+    margin-bottom: 0;
+  }
+
+  #tabTime {
+    font-weight: 300;
+    color: $grey;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
   .item-table {
     display: flex;
     flex-direction: column;
@@ -14,6 +27,11 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        align-items: center;
+
+        p.item-description {
+          color: $grey;
+        }
       }
     }
   
@@ -24,10 +42,16 @@
     .item-row.selected {
       background-color: $dark-blue;
       color: $white;
+
+      p.item-description {
+        color: $mid-light-grey;
+      }
     }
   }
 
   .totals {
+    margin-top: 20px;
+
     .row {
       display: flex;
       flex-direction: row;

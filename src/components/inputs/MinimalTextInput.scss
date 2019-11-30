@@ -1,0 +1,13 @@
+@import '../../styles/core.scss';
+
+input.minimal-text-input {
+  padding: 10px;
+  border: none;
+  border-bottom: 1px dotted #000;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+input.minimal-text-input:focus {
+  border-bottom: 1.5px solid $dark-blue;
+}
