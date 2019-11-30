@@ -10,6 +10,7 @@ const Btn = styled.div({
   color: `#fff`,
   backgroundColor: `#192a56`,
   cursor: `pointer`,
+  textAlign: `center`
 })
 
 class PrimaryButton extends React.Component {

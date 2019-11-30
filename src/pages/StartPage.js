@@ -30,7 +30,7 @@ const CreateButton = styled.div({
 const StartPage = () => (
   <Container>
     <AppName><strong>TabWise</strong></AppName>
-    <h1>👋</h1>
+    <h1><span role="img" aria-label="hello">👋</span></h1>
     <ShortcodeInput
       placeholder="shortcode"
     />

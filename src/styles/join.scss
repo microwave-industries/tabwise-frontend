@@ -1,0 +1,45 @@
+@import './core.scss';
+
+.container {
+  padding: 10px;
+  .item-table {
+    display: flex;
+    flex-direction: column;
+  
+    .item-row {
+      padding: 10px;
+      cursor: pointer;
+  
+      .item-info {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+  
+    .item-row:nth-of-type(2n) {
+      background-color: $light-grey;
+    }
+  
+    .item-row.selected {
+      background-color: $dark-blue;
+      color: $white;
+    }
+  }
+
+  .totals {
+    .row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .tab-total {
+      margin-top: 20px;
+    }
+    
+    .row + .row {
+      margin-top: 10px;
+    }
+  }
+}

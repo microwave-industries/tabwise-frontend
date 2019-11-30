@@ -7,6 +7,7 @@ class Link extends React.Component {
       <GatsbyLink
         {...this.props}
         style={{
+          color: `#273c75`,
           textDecoration: `dotted underline`,
           ...this.props.style
         }}
