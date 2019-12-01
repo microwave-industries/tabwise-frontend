@@ -16,4 +16,5 @@ jobs:
     - run: npm i -g surge
     - run: npm ci --production
     - run: npm run build
+    - run: echo ${{ secrets.ENV_VARS }} > .env.production
     - run: surge ./public/ ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}

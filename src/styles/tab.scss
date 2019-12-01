@@ -7,7 +7,16 @@
   .container {
     padding: 20px 20px 0 20px;
     overflow: scroll;
-
+    
+    #error {
+      font-weight: 300;
+      margin-bottom: 0;
+    }
+    
+    #loading {
+      font-weight: 300;
+      margin-bottom: 0;
+    }
     #placeName {
       font-weight: 300;
       margin-bottom: 0;

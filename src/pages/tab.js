@@ -150,17 +150,21 @@ class Tab extends React.Component {
 
     if (error !== null) {
       return (
-        <div className="view-tab">
-          <h1>{error}.</h1>
-        </div>
+          <MobileLayout id="view-tab">
+              <div className="container">
+                  <h1 id="error">{error}.</h1>
+                </div>
+          </MobileLayout >
       )
     }
 
     if (tab === null) {
       return (
-        <div className="view-tab">
-          <h1>Loading...</h1>
-        </div>
+          <MobileLayout id="view-tab">
+              <div className="container">
+                  <h1 id="loading">Loading...</h1>
+              </div>
+          </MobileLayout >
       )
     }
 
