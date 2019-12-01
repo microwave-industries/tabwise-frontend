@@ -5,11 +5,15 @@ on: [push]
 jobs:
   build:
 
-    name: github pages deployment
+    name: surge.sh deployment
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v1
-    - uses: enriikke/gatsby-gh-pages-action@v2
+    - uses: actions/setup-node@v1
       with:
-          access-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        node-version: 12
+    - run: npm i -g surge
+    - run: npm ci --production
+    - run: npm run build
+    - run: surge ./public/ ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
