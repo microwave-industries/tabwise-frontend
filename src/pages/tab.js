@@ -17,7 +17,10 @@ class Tab extends React.Component {
       error: null,
       selectedItems: [],
       claimingItems: false,
-      claimError: null
+      claimError: null,
+      quantitySelecting: null,
+      quantityMax: 0,
+      quantityCur: 0,
     }
   }
   componentDidMount() {
@@ -45,6 +48,28 @@ class Tab extends React.Component {
       })
     }
   }
+  openQuantitySelector = (index, qty) => () => {
+    const current = this.state.selectedItems.filter(x => x == index).length;
+    this.setState({
+      quantitySelecting: index,
+      quantityMax: qty,
+      quantityCur: current
+    })
+  }
+  selectQuantity = (quantity) => {
+    const nsel = this.state.selectedItems.filter(x => x != this.state.quantitySelecting).concat(new Array(quantity).fill(this.state.quantitySelecting));
+    this.setState({
+      quantitySelecting: null,
+      quantityMax: 0,
+      quantityCur: 0,
+      selectedItems: nsel
+    })
+  }
+  cancelQuantity = () => {
+    this.setState({
+      quantitySelecting: null
+    })
+  }
   claimItems = async () => {
     const { selectedItems } = this.state
     if (selectedItems.length === 0) {
@@ -61,34 +86,46 @@ class Tab extends React.Component {
       this.setState({ claimError: `Oops, could not claim items`, claimingItems: false })
     }
   }
-  renderItem = ({ desc, price, subItems, lineTotal }, index) => {
+  renderItem = ({ qty, desc, price, subItems, lineTotal }, index) => {
     let description = [], addOns = []
     if (subItems && subItems.length > 0) {
       // determine if subitem is description (no additional charge) or add-on (with price)
       description = subItems.filter(({ lineTotal }) => lineTotal === 0).map(({ desc }) => desc)
       // addOns = subItems.filter(({ lineTotal }) => lineTotal > 0)
     }
+    
+    let cb = this.toggleSelect(index)
+    let badge = ''
+    let priceTag = price;
+    if (qty > 1) {
+      cb = this.openQuantitySelector(index, qty)
+      const selectedCount = this.state.selectedItems.filter(x => x == index).length
+      if (selectedCount > 0) {
+        badge = ` (x${selectedCount})`
+        priceTag = price * selectedCount;
+      }
+    }
+
     return (
       <div
         className={classnames("item-row", { selected: this.state.selectedItems.includes(index) })}
-        onClick={this.toggleSelect(index)}
+        onClick={cb}
         key={index}
       >
         <div className="item-info">
           <div>
-            {desc}
+            {desc} {badge}
             {description.length > 0 ? description.map((d, i) =>
               <p className="item-description" key={i}>
                 {d}
               </p>
             ) : null}
           </div>
-          <div>{price ? price : lineTotal}</div>
+          <div>{priceTag ? priceTag : lineTotal}</div>
         </div>
       </div>
     )
   }
-
   render() {
     const { tab, error, claimingItems } = this.state
 
@@ -114,10 +151,7 @@ class Tab extends React.Component {
     const untaxedTotal = tabTotal - charges.map(x => x.amount).reduce((x, y) => x + y, 0)
 
     const userShare = selectedItems.length > 0
-      ? items
-        .filter((v, i) => selectedItems.includes(i))
-        .map(i => i.lineTotal)
-        .reduce((prev, current) => prev + current, 0)
+      ? selectedItems.map(x => items[x].price).reduce((x, y) => x + y, 0)
       : 0
     const chargesString = charges.map(c => `${c.percentage}%`).join(`+`)
     const userTaxedShare = selectedItems.length > 0
@@ -131,8 +165,16 @@ class Tab extends React.Component {
       ) / 100 : 0
     const showCharges = userShare > 0 && charges.length > 0
 
+    const {quantitySelecting, quantityMax, quantityCur} = this.state
+
     return (
       <div className="view-tab">
+        <QuantitySelect 
+          visible={quantitySelecting != null}
+          maxQuantity={quantityMax}
+          curQuantity={quantityCur}
+          onQuantitySelect={this.selectQuantity}
+          onCancel={this.cancelQuantity} />
         <h1 id="placeName">{place}</h1>
         <h2 id="tabTime">{Timestamp.fromNow(date)}</h2>
         <div className="item-table">
@@ -178,6 +220,28 @@ class Tab extends React.Component {
       </div >
     )
   }
+}
+
+const QuantitySelect = ({visible, onQuantitySelect, maxQuantity, curQuantity, onCancel}) => {
+  let selects = []
+  for (let i = 0; i <= maxQuantity; i++) {
+    selects.push(
+      <div
+        className={classnames('item-row', {selected: curQuantity === i})}
+        onClick={() => {onQuantitySelect(i)}}>
+          {i}
+      </div>
+    )
+  }
+  return (<div className={classnames("modal", {active: visible})} onClick={onCancel}>
+    <div className="modal-body" onClick={(e) => e.stopPropagation()}>
+      <h3>How many?</h3>
+      <div className='item-table'>
+        {selects}
+      </div>
+      <PrimaryButton onClick={onCancel}>Never mind</PrimaryButton>
+    </div>
+  </div>)
 }
 
 export default Tab
