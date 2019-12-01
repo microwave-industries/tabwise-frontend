@@ -1,7 +1,6 @@
 import React from 'react'
 import { navigate } from "gatsby"
 import classnames from 'classnames'
-import queryString from 'query-string'
 
 import MobileLayout from '../components/MobileLayout'
 import { PrimaryButton } from '../components/buttons'
@@ -14,6 +13,7 @@ class Tab extends React.Component {
   constructor() {
     super()
     this.state = {
+      token: null,
       code: null,
       tab: null,
       error: null,
@@ -29,11 +29,13 @@ class Tab extends React.Component {
     this.fetchTab()
   }
   fetchTab = async () => {
-    // const { location: { search } } = this.props
-    // const { name } = queryString.parse(search)
     try {
-      const { success, token, code, ...tab } = await Api.updateRoom()
-      this.setState({ tab, code })
+      const { success, token, code, users, ...tab } = await Api.updateRoom()
+      this.setState({
+        tab,
+        code,
+        selectedItems: users.filter(({ uid }) => uid === token)[0].items
+      })
     } catch (error) {
       this.setState({ error: `Oops, could not fetch tab` })
     }
@@ -51,7 +53,7 @@ class Tab extends React.Component {
     }
   }
   openQuantitySelector = (index, qty) => () => {
-    const current = this.state.selectedItems.filter(x => x == index).length;
+    const current = this.state.selectedItems.filter(x => x === index).length;
     this.setState({
       quantitySelecting: index,
       quantityMax: qty,
@@ -59,7 +61,7 @@ class Tab extends React.Component {
     })
   }
   selectQuantity = (quantity) => {
-    const nsel = this.state.selectedItems.filter(x => x != this.state.quantitySelecting).concat(new Array(quantity).fill(this.state.quantitySelecting));
+    const nsel = this.state.selectedItems.filter(x => x !== this.state.quantitySelecting).concat(new Array(quantity).fill(this.state.quantitySelecting));
     this.setState({
       quantitySelecting: null,
       quantityMax: 0,
@@ -81,7 +83,7 @@ class Tab extends React.Component {
     }
     try {
       this.setState({ claimingItems: true })
-      const data = await Api.claimItems(selectedItems)
+      await Api.claimItems(selectedItems)
       this.setState({ claimingItems: false })
       navigate(`/pending`)
     } catch (error) {
@@ -101,7 +103,7 @@ class Tab extends React.Component {
     let priceTag = price;
     if (qty > 1) {
       cb = this.openQuantitySelector(index, qty)
-      const selectedCount = this.state.selectedItems.filter(x => x == index).length
+      const selectedCount = this.state.selectedItems.filter(x => x === index).length
       if (selectedCount > 0) {
         badge = ` (x${selectedCount})`
         priceTag = price * selectedCount;
@@ -236,7 +238,8 @@ const QuantitySelect = ({ visible, onQuantitySelect, maxQuantity, curQuantity, o
     selects.push(
       <div
         className={classnames('item-row', { selected: curQuantity === i })}
-        onClick={() => { onQuantitySelect(i) }}>
+        onClick={() => { onQuantitySelect(i) }}
+        key={i}>
         {i}
       </div>
     )
