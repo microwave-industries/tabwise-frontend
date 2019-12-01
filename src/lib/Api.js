@@ -73,9 +73,9 @@ const setPaymentURL = async (paymentURL) => {
   }
 }
 
-const getPaymentLink = async (amount, description) => {
+const getPaymentLink = async () => {
   try {
-    const { data } = await api.get(`/claim/pay?amount=${amount}&description=${description}`)
+    const { data } = await api.get(`/claim/pay`)
     return data
   } catch (error) {
     throw error
@@ -86,5 +86,7 @@ export default {
   uploadReceipt,
   joinTab,
   claimItems,
-  updateRoom
+  updateRoom,
+  setPaymentURL,
+  getPaymentLink
 }
