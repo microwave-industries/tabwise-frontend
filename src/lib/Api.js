@@ -40,7 +40,26 @@ const joinTab = async (name, shortcode) => {
 const claimItems = async (items) => { // array of indices
   try {
     const { data } = await api.post(`/claim/submit`, { items: JSON.stringify(items) })
-    return data
+    const { success, ...remainder } = data
+    if (success) {
+      return remainder
+    } else {
+      throw new Error(`Could not claim items: ${JSON.stringify(data)}`)
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
+const updateRoom = async () => {
+  try {
+    const { data } = await api.get(`/mm/update`)
+    const { success, ...remainder } = data
+    if (success) {
+      return remainder
+    } else {
+      throw new Error(`Could not fetch updates for room: ${JSON.stringify(data)}`)
+    }
   } catch (error) {
     throw error
   }
@@ -49,5 +68,6 @@ const claimItems = async (items) => { // array of indices
 export default {
   uploadReceipt,
   joinTab,
-  claimItems
+  claimItems,
+  updateRoom
 }

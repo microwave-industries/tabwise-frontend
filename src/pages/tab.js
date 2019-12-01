@@ -1,4 +1,5 @@
 import React from 'react'
+import { navigate } from "gatsby"
 import classnames from 'classnames'
 import queryString from 'query-string'
 
@@ -54,8 +55,8 @@ class Tab extends React.Component {
     try {
       this.setState({ claimingItems: true })
       const data = await Api.claimItems(selectedItems)
-      console.log(data)
       this.setState({ claimingItems: false })
+      navigate(`/pending`)
     } catch (error) {
       this.setState({ claimError: `Oops, could not claim items`, claimingItems: false })
     }
