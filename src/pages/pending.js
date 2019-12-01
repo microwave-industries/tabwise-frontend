@@ -16,26 +16,18 @@ class PendingPage extends React.Component {
       unclaimedItems: [],
       users: []
     }
-    this.interval = null
-    this.shouldFetch = false
+    this.timeout = null
   }
   componentDidMount() {
     this.updateData()
-    this.interval = window.setInterval(1000, this.updateData)
   }
   componentWillUnmount() {
-    window.clearInterval(this.interval)
+    window.clearTimeout(this.timeout)
   }
   updateData = async () => {
-    if (!this.shouldFetch) {
-      return
-    }
-    this.shouldFetch = false
-
     try {
       const { items, users, diff, complete, code } = await Api.updateRoom()
       if (complete) {
-        window.clearInterval(this.updater)
         navigate(`/pay`)
       }
       this.setState({
@@ -45,7 +37,7 @@ class PendingPage extends React.Component {
         users,
         complete
       }, () => {
-        this.shouldFetch = true
+        this.timeout = window.setTimeout(this.updateData, 500)
       })
     } catch (error) {
       console.error(error)

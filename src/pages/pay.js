@@ -89,7 +89,7 @@ class PayPage extends React.Component {
             <hr />
             <div className="row">
               <div>Your share {charges.length > 0 ? `(+${chargesString})` : null}</div>
-              <div>{amount}</div>
+              <div>{amount.toFixed(2)}</div>
             </div>
           </div>
           <div style={{ height: 40 }} />
