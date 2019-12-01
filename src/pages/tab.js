@@ -31,10 +31,13 @@ class Tab extends React.Component {
   fetchTab = async () => {
     try {
       const { success, token, code, users, ...tab } = await Api.updateRoom()
+      const alreadySelected = users.filter(({ uid }) => uid === token)[0].items
+      if (alreadySelected) {
+        this.setState({ selectedItems: alreadySelected })
+      }
       this.setState({
         tab,
         code,
-        selectedItems: users.filter(({ uid }) => uid === token)[0].items
       })
     } catch (error) {
       this.setState({ error: `Oops, could not fetch tab` })
