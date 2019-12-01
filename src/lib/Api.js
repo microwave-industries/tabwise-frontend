@@ -6,8 +6,8 @@ const api = axios.create({
 })
 
 const uploadReceipt = async (receiptPhoto, paymentUrl) => {
-    const formData = new FormData()
-    formData.append('paymentUrl', paymentUrl)
+  const formData = new FormData()
+  formData.append('paymentUrl', paymentUrl)
   formData.append('file', receiptPhoto)
 
   try {
