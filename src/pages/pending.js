@@ -16,11 +16,22 @@ class PendingPage extends React.Component {
       unclaimedItems: [],
       users: []
     }
+    this.interval = null
+    this.shouldFetch = false
   }
   componentDidMount() {
     this.updateData()
+    this.interval = window.setInterval(1000, this.updateData)
+  }
+  componentWillUnmount() {
+    window.clearInterval(this.interval)
   }
   updateData = async () => {
+    if (!this.shouldFetch) {
+      return
+    }
+    this.shouldFetch = false
+
     try {
       const { items, users, diff, complete, code } = await Api.updateRoom()
       if (complete) {
@@ -33,7 +44,9 @@ class PendingPage extends React.Component {
         items,
         users,
         complete
-      }, () => this.updateData())
+      }, () => {
+        this.shouldFetch = true
+      })
     } catch (error) {
       console.error(error)
     }
