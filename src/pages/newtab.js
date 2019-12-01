@@ -96,7 +96,7 @@ class NewTab extends React.Component {
                     <>
                       <img
                         src={URL.createObjectURL(photo)}
-                        style={{ maxWidth: `80%`, maxHeight: `200px`, marginBottom: 20 }}
+                        style={{ maxWidth: `80%`, maxHeight: `300px`, marginBottom: 20 }}
                         alt="receipt preview"
                       />
                       <CheckCircle size={40} color="#218c74" />
@@ -107,7 +107,6 @@ class NewTab extends React.Component {
                 id="photoUpload"
                 type="file"
                 accept="image/*"
-                // capture="camera"
                 ref={this.fileInput}
                 onChange={this.onSelectPhoto}
               />
