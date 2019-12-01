@@ -133,26 +133,16 @@ class Tab extends React.Component {
 
     if (error !== null) {
       return (
-<<<<<<< HEAD
-        <div className="container">
-              <h1 id="h1">{error}.</h1>
-=======
         <div className="view-tab">
           <h1>{error}.</h1>
->>>>>>> be549993a8eda44fa25638bdd0b49a1cc07cfe82
         </div>
       )
     }
 
     if (tab === null) {
       return (
-<<<<<<< HEAD
-        <div className="container">
-          <h1 id="h1">Loading...</h1>
-=======
         <div className="view-tab">
           <h1>Loading...</h1>
->>>>>>> be549993a8eda44fa25638bdd0b49a1cc07cfe82
         </div>
       )
     }

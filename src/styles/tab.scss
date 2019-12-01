@@ -1,25 +1,5 @@
 @import './core.scss';
 
-<<<<<<< HEAD
-
-
-
-.view-tab {
-  padding: 10px;
-
-  #placeName {
-    font-weight: 300;
-    margin-bottom: 0;
-  }
-
-  #tabTime {
-    font-weight: 300;
-    color: $grey;
-    margin-top: 0;
-    margin-bottom: 10px;
-  }
-  
-=======
 #view-tab {
   display: flex;
   flex-direction: column;
@@ -27,7 +7,6 @@
   .container {
     padding: 20px;
     overflow: scroll;
->>>>>>> be549993a8eda44fa25638bdd0b49a1cc07cfe82
 
     #placeName {
       font-weight: 300;
@@ -140,9 +119,5 @@
       }
     }
   }
-<<<<<<< HEAD
-}
-=======
   
 }
->>>>>>> be549993a8eda44fa25638bdd0b49a1cc07cfe82
