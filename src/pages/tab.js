@@ -2,7 +2,6 @@ import React from 'react'
 import { navigate } from "gatsby"
 import classnames from 'classnames'
 import queryString from 'query-string'
-
 import { PrimaryButton } from '../components/buttons'
 import { ErrorMessage } from '../components/typography'
 import { Api, Timestamp } from '../lib'
@@ -95,7 +94,7 @@ class Tab extends React.Component {
     if (error !== null) {
       return (
         <div className="container">
-          <h1>{error}.</h1>
+              <h1 id="h1">{error}.</h1>
         </div>
       )
     }
@@ -103,7 +102,7 @@ class Tab extends React.Component {
     if (tab === null) {
       return (
         <div className="container">
-          <h1>Loading...</h1>
+          <h1 id="h1">Loading...</h1>
         </div>
       )
     }
