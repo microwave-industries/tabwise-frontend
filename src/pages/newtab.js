@@ -2,6 +2,7 @@ import React from 'react'
 import { navigate } from "gatsby"
 import styled from 'styled-components'
 import { Camera, CheckCircle } from 'react-feather'
+import SEO from '../components/seo'
 import MobileLayout from '../components/MobileLayout'
 import { PrimaryButton } from '../components/buttons'
 import { MinimalTextInput } from '../components/inputs'
@@ -69,6 +70,7 @@ class NewTab extends React.Component {
     const { paymentUrl, photo, error, creatingTab } = this.state
     return (
       <MobileLayout id="new-tab">
+        <SEO title="New Tab" />
         <div className="container">
           <MinimalTextInput
             style={{ fontSize: `1.5em` }}

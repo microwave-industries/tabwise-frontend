@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import SEO from '../components/seo'
 import Api from '../lib/Api'
 import MobileLayout from '../components/MobileLayout'
 import { PrimaryButton } from '../components/buttons'
@@ -57,6 +58,7 @@ class PayPage extends React.Component {
     const name = url.split("/")[3].replace(new RegExp(`([a-z])([A-Z][a-z])`), `$1 $2`)
     return (
       <MobileLayout id="view-pay">
+        <SEO title="Settle Up" />
         <div className="container">
           <h1 id="pageTitle">
             Pay <u>£{subTotal.toFixed(2)}</u> <br />to <br /><strong>{name}</strong>

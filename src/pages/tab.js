@@ -2,6 +2,7 @@ import React from 'react'
 import { navigate } from "gatsby"
 import classnames from 'classnames'
 
+import SEO from '../components/seo'
 import MobileLayout from '../components/MobileLayout'
 import { PrimaryButton } from '../components/buttons'
 import { ErrorMessage } from '../components/typography'
@@ -175,6 +176,7 @@ class Tab extends React.Component {
 
     return (
       <MobileLayout id="view-tab">
+        <SEO title="Tab" />
         <div className="container">
           <QuantitySelect
             visible={quantitySelecting != null}

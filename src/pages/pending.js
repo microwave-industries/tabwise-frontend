@@ -1,6 +1,7 @@
 import React from 'react'
 import { navigate } from "gatsby"
 import { CheckCircle } from 'react-feather'
+import SEO from '../components/seo'
 import { Api } from '../lib'
 import MobileLayout from '../components/MobileLayout'
 import { PrimaryButton } from '../components/buttons'
@@ -54,6 +55,7 @@ class PendingPage extends React.Component {
     }
     return (
       <MobileLayout id="pending-view">
+        <SEO title="Pending Tab" />
         <div className="container">
           <video id="waitingGif" autoplay="autoplay" loop="loop" muted>
             <source src="https://media.giphy.com/media/tXL4FHPSnVJ0A/giphy.mp4" type="video/mp4" />
