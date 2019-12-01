@@ -1,5 +1,6 @@
 @import './core.scss';
 
+<<<<<<< HEAD
 
 
 
@@ -18,66 +19,130 @@
     margin-bottom: 10px;
   }
   
+=======
+#view-tab {
+  display: flex;
+  flex-direction: column;
 
-  .item-table {
-    display: flex;
-    flex-direction: column;
+  .container {
+    padding: 20px;
+    overflow: scroll;
+>>>>>>> be549993a8eda44fa25638bdd0b49a1cc07cfe82
+
+    #placeName {
+      font-weight: 300;
+      margin-bottom: 0;
+    }
   
-    .item-row {
-      padding: 10px;
-      cursor: pointer;
+    #tabTime {
+      font-weight: 300;
+      color: $grey;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
   
-      .item-info {
+    #tabCode {
+      font-weight: 300;
+      color: $grey;
+      margin-top: 0;
+      font-size: 1em;
+    }
+  
+    .item-table {
+      display: flex;
+      flex-direction: column;
+    
+      .item-row {
+        padding: 10px;
+        cursor: pointer;
+    
+        .item-info {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+  
+          p.item-description {
+            color: $grey;
+          }
+        }
+  
+        .item-info>div:nth-of-type(1){
+          text-align: left;
+        }
+      }
+    
+      .item-row:nth-of-type(2n) {
+        background-color: $light-grey;
+      }
+    
+      .item-row.selected {
+        background-color: $dark-blue;
+        color: $white;
+  
+        p.item-description {
+          color: $mid-light-grey;
+        }
+      }
+    }
+  
+    .totals {
+      margin-top: 20px;
+  
+      .row {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
-
-        p.item-description {
-          color: $grey;
+      }
+  
+      .tab-total {
+        margin-top: 20px;
+      }
+      
+      .row + .row {
+        margin-top: 10px;
+      }
+  
+      .row.user-total-no-tax {
+        margin-top: 20px;
+      }
+  
+      .row.user-tax {
+        color: $grey;
+      }
+    }
+  
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      display: none;
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+  
+      &.active {
+        display: block;
+        opacity: 1;
+      }
+  
+      .modal-body {
+        padding: 15px;
+        box-sizing: border-box;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        background: rgb(255, 255, 255);
+        .item-row {
+          text-align: center
         }
       }
-
-      .item-info>div:nth-of-type(1){
-        text-align: left;
-      }
-    }
-  
-    .item-row:nth-of-type(2n) {
-      background-color: $light-grey;
-    }
-  
-    .item-row.selected {
-      background-color: $dark-blue;
-      color: $white;
-
-      p.item-description {
-        color: $mid-light-grey;
-      }
     }
   }
-
-  .totals {
-    margin-top: 20px;
-
-    .row {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
-
-    .tab-total {
-      margin-top: 20px;
-    }
-    
-    .row + .row {
-      margin-top: 10px;
-    }
-
-    .selected-total {
-      div:nth-of-type(2){
-        text-align: right;
-      }
-    }
-  }
+<<<<<<< HEAD
 }
+=======
+  
+}
+>>>>>>> be549993a8eda44fa25638bdd0b49a1cc07cfe82

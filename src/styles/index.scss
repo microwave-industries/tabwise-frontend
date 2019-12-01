@@ -1,0 +1,26 @@
+@import './core.scss';
+
+#start-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .container {
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    
+    #app-name {
+      text-align: center;
+      font-size: 3.0em;
+      margin-bottom: 40px;
+      color: $dark-blue;
+      font-weight: 300;
+    }
+  
+    .create-tab {
+      margin-top: 40px;
+    }
+  }
+  
+}

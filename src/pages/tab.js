@@ -2,6 +2,8 @@ import React from 'react'
 import { navigate } from "gatsby"
 import classnames from 'classnames'
 import queryString from 'query-string'
+
+import MobileLayout from '../components/MobileLayout'
 import { PrimaryButton } from '../components/buttons'
 import { ErrorMessage } from '../components/typography'
 import { Api, Timestamp } from '../lib'
@@ -12,22 +14,26 @@ class Tab extends React.Component {
   constructor() {
     super()
     this.state = {
+      code: null,
       tab: null,
       error: null,
       selectedItems: [],
       claimingItems: false,
-      claimError: null
+      claimError: null,
+      quantitySelecting: null,
+      quantityMax: 0,
+      quantityCur: 0,
     }
   }
   componentDidMount() {
     this.fetchTab()
   }
   fetchTab = async () => {
-    const { location: { search } } = this.props
-    const { shortcode, name } = queryString.parse(search)
+    // const { location: { search } } = this.props
+    // const { name } = queryString.parse(search)
     try {
-      const { success, token, ...tab } = await Api.joinTab(name, shortcode)
-      this.setState({ tab })
+      const { success, token, code, ...tab } = await Api.updateRoom()
+      this.setState({ tab, code })
     } catch (error) {
       this.setState({ error: `Oops, could not fetch tab` })
     }
@@ -43,6 +49,28 @@ class Tab extends React.Component {
         selectedItems: [...selectedItems, index]
       })
     }
+  }
+  openQuantitySelector = (index, qty) => () => {
+    const current = this.state.selectedItems.filter(x => x == index).length;
+    this.setState({
+      quantitySelecting: index,
+      quantityMax: qty,
+      quantityCur: current
+    })
+  }
+  selectQuantity = (quantity) => {
+    const nsel = this.state.selectedItems.filter(x => x != this.state.quantitySelecting).concat(new Array(quantity).fill(this.state.quantitySelecting));
+    this.setState({
+      quantitySelecting: null,
+      quantityMax: 0,
+      quantityCur: 0,
+      selectedItems: nsel
+    })
+  }
+  cancelQuantity = () => {
+    this.setState({
+      quantitySelecting: null
+    })
   }
   claimItems = async () => {
     const { selectedItems } = this.state
@@ -60,49 +88,71 @@ class Tab extends React.Component {
       this.setState({ claimError: `Oops, could not claim items`, claimingItems: false })
     }
   }
-  renderItem = ({ desc, price, subItems, lineTotal }, index) => {
+  renderItem = ({ qty, desc, price, subItems, lineTotal }, index) => {
     let description = [], addOns = []
     if (subItems && subItems.length > 0) {
       // determine if subitem is description (no additional charge) or add-on (with price)
       description = subItems.filter(({ lineTotal }) => lineTotal === 0).map(({ desc }) => desc)
       // addOns = subItems.filter(({ lineTotal }) => lineTotal > 0)
     }
+
+    let cb = this.toggleSelect(index)
+    let badge = ''
+    let priceTag = price;
+    if (qty > 1) {
+      cb = this.openQuantitySelector(index, qty)
+      const selectedCount = this.state.selectedItems.filter(x => x == index).length
+      if (selectedCount > 0) {
+        badge = ` (x${selectedCount})`
+        priceTag = price * selectedCount;
+      }
+    }
+
     return (
       <div
         className={classnames("item-row", { selected: this.state.selectedItems.includes(index) })}
-        onClick={this.toggleSelect(index)}
+        onClick={cb}
         key={index}
       >
         <div className="item-info">
           <div>
-            {desc}
+            {desc} {badge}
             {description.length > 0 ? description.map((d, i) =>
               <p className="item-description" key={i}>
                 {d}
               </p>
             ) : null}
           </div>
-          <div>{price ? price : lineTotal}</div>
+          <div>{priceTag ? priceTag.toFixed(2) : lineTotal.toFixed(2)}</div>
         </div>
       </div>
     )
   }
-
   render() {
     const { tab, error, claimingItems } = this.state
 
     if (error !== null) {
       return (
+<<<<<<< HEAD
         <div className="container">
               <h1 id="h1">{error}.</h1>
+=======
+        <div className="view-tab">
+          <h1>{error}.</h1>
+>>>>>>> be549993a8eda44fa25638bdd0b49a1cc07cfe82
         </div>
       )
     }
 
     if (tab === null) {
       return (
+<<<<<<< HEAD
         <div className="container">
           <h1 id="h1">Loading...</h1>
+=======
+        <div className="view-tab">
+          <h1>Loading...</h1>
+>>>>>>> be549993a8eda44fa25638bdd0b49a1cc07cfe82
         </div>
       )
     }
@@ -113,70 +163,103 @@ class Tab extends React.Component {
     const untaxedTotal = tabTotal - charges.map(x => x.amount).reduce((x, y) => x + y, 0)
 
     const userShare = selectedItems.length > 0
-      ? items
-        .filter((v, i) => selectedItems.includes(i))
-        .map(i => i.lineTotal)
-        .reduce((prev, current) => prev + current, 0)
+      ? selectedItems.map(x => items[x].price).reduce((x, y) => x + y, 0)
       : 0
-    const chargesString = charges.map(c => `${c.percentage}%`).join(`+`)
-    const userTaxedShare = selectedItems.length > 0
+    const chargesString = charges.map(c => `${c.percentage.toFixed(2)}%`).join(`+`)
+    const userTaxShare = selectedItems.length > 0
       ? Math.round(
         (
-          userShare
-          + charges
+          charges
             .map(x => (Math.round(100 * x.amount * (userShare / untaxedTotal)) / 100))
             .reduce((x, y) => x + y, 0)
         ) * 100
       ) / 100 : 0
     const showCharges = userShare > 0 && charges.length > 0
 
+    const { quantitySelecting, quantityMax, quantityCur } = this.state
+
     return (
-      <div className="view-tab">
-        <h1 id="placeName">{place}</h1>
-        <h2 id="tabTime">{Timestamp.fromNow(date)}</h2>
-        <div className="item-table">
-          {items.map(this.renderItem)}
-        </div>
-        <div className="totals">
-          <hr id="totals-divider" />
-          <div className="row tab-total">
-            <div>Tab Total</div>
-            <div>{tabTotal}</div>
+      <MobileLayout id="view-tab">
+        <div className="container">
+          <QuantitySelect
+            visible={quantitySelecting != null}
+            maxQuantity={quantityMax}
+            curQuantity={quantityCur}
+            onQuantitySelect={this.selectQuantity}
+            onCancel={this.cancelQuantity} />
+          <h1 id="placeName">{place}</h1>
+          <h2 id="tabTime">{Timestamp.fromNow(date)}</h2>
+          <h3 id="tabCode">Code: {this.state.code}</h3>
+          <div className="item-table">
+            {items.map(this.renderItem)}
           </div>
-          <div className="row selected-total">
-            <div>Your Share</div>
-            <div>
-              <span style={{
-                color: showCharges ? `#718093` : `#000`
-              }}>
-                {userShare.toFixed(2)}
-              </span>
-              {
-                showCharges ? (
-                  <div className="tax">
-                    (+{chargesString}) {userTaxedShare}
-                  </div>
-                ) : null
-              }
+          <div className="totals">
+            <hr id="totals-divider" />
+            <div className="row tab-total">
+              <div>Tab Total</div>
+              <div>{tabTotal}</div>
             </div>
-          </div >
+            <div className="row user-total-no-tax">
+              <div>Your Share{showCharges ? ` (w/o tax)` : null}</div>
+              <div>{userShare.toFixed(2)}</div>
+            </div >
+            {
+              showCharges ? (
+                <>
+                  <div className="row user-tax">
+                    <div>Taxes &amp; additional charges  (+{chargesString})</div>
+                    <div className="tax">
+                      {userTaxShare.toFixed(2)}
+                    </div>
+                  </div>
+                  <div className="row user-total-tax">
+                    <div><strong>Your Share (with tax)</strong></div>
+                    <div><strong>{(userShare + userTaxShare).toFixed(2)}</strong></div>
+                  </div >
+                </>
+              ) : null
+            }
+
+          </div>
+          {
+            claimError ? (
+              <ErrorMessage>
+                {claimError}
+              </ErrorMessage>
+            ) : null
+          }
         </div>
-        {
-          claimError ? (
-            <ErrorMessage>
-              {claimError}
-            </ErrorMessage>
-          ) : null
-        }
         <PrimaryButton
           onClick={this.claimItems}
           isLoading={claimingItems}
         >
           NEXT
         </PrimaryButton>
-      </div >
+      </MobileLayout >
     )
   }
+}
+
+const QuantitySelect = ({ visible, onQuantitySelect, maxQuantity, curQuantity, onCancel }) => {
+  let selects = []
+  for (let i = 0; i <= maxQuantity; i++) {
+    selects.push(
+      <div
+        className={classnames('item-row', { selected: curQuantity === i })}
+        onClick={() => { onQuantitySelect(i) }}>
+        {i}
+      </div>
+    )
+  }
+  return (<div className={classnames("modal", { active: visible })} onClick={onCancel}>
+    <div className="modal-body" onClick={(e) => e.stopPropagation()}>
+      <h3>How many?</h3>
+      <div className='item-table'>
+        {selects}
+      </div>
+      <PrimaryButton onClick={onCancel}>Never mind</PrimaryButton>
+    </div>
+  </div>)
 }
 
 export default Tab

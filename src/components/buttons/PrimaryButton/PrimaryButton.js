@@ -3,7 +3,6 @@ import { navigate } from "gatsby"
 import styled from 'styled-components'
 
 const Btn = styled.div({
-  marginTop: 20,
   padding: 20,
   boxSizing: `border-box`,
   width: `100%`,
@@ -27,12 +26,12 @@ class PrimaryButton extends React.Component {
     }
   }
   render() {
-    const { children, isLoading, loadingText = `Loading...` } = this.props
+    const { children, isLoading, loadingText = `Loading...`, style } = this.props
     if (isLoading) {
-      return <LoadingBtn>{loadingText}</LoadingBtn>
+      return <LoadingBtn style={style}>{loadingText}</LoadingBtn>
     }
     return (
-      <Btn onClick={this.onClick}>{children}</Btn>
+      <Btn onClick={this.onClick} style={style}>{children}</Btn>
     )
   }
 }
