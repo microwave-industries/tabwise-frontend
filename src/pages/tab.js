@@ -177,6 +177,7 @@ class Tab extends React.Component {
           onCancel={this.cancelQuantity} />
         <h1 id="placeName">{place}</h1>
         <h2 id="tabTime">{Timestamp.fromNow(date)}</h2>
+        <h3 id="tabCode">Code: {this.state.code}</h3>
         <div className="item-table">
           {items.map(this.renderItem)}
         </div>
