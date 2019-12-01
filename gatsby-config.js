@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
     title: `TabWise`,
-    description: `See it, Say it, Split it.`,
+    description: `Scan it, Say it, Split it.`,
     author: `TabWise`,
   },
   plugins: [
