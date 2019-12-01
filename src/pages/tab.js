@@ -83,7 +83,7 @@ class Tab extends React.Component {
               </p>
             ) : null}
           </div>
-          <div>{price ? price : lineTotal}</div>
+          <div>{price ? price.toFixed(2) : lineTotal.toFixed(2)}</div>
         </div>
       </div>
     )
@@ -119,12 +119,11 @@ class Tab extends React.Component {
         .map(i => i.lineTotal)
         .reduce((prev, current) => prev + current, 0)
       : 0
-    const chargesString = charges.map(c => `${c.percentage}%`).join(`+`)
-    const userTaxedShare = selectedItems.length > 0
+    const chargesString = charges.map(c => `${c.percentage.toFixed(2)}%`).join(`+`)
+    const userTaxShare = selectedItems.length > 0
       ? Math.round(
         (
-          userShare
-          + charges
+          charges
             .map(x => (Math.round(100 * x.amount * (userShare / untaxedTotal)) / 100))
             .reduce((x, y) => x + y, 0)
         ) * 100
@@ -144,23 +143,27 @@ class Tab extends React.Component {
             <div>Tab Total</div>
             <div>{tabTotal}</div>
           </div>
-          <div className="row selected-total">
-            <div>Your Share</div>
-            <div>
-              <span style={{
-                color: showCharges ? `#718093` : `#000`
-              }}>
-                {userShare.toFixed(2)}
-              </span>
-              {
-                showCharges ? (
-                  <div className="tax">
-                    (+{chargesString}) {userTaxedShare}
-                  </div>
-                ) : null
-              }
-            </div>
+          <div className="row user-total-no-tax">
+            <div>Your Share{showCharges ? ` (w/o tax)` : null}</div>
+            <div>{userShare.toFixed(2)}</div>
           </div >
+          {
+            showCharges ? (
+              <>
+                <div className="row user-tax">
+                  <div>Taxes &amp; additional charges  (+{chargesString})</div>
+                  <div className="tax">
+                    {userTaxShare.toFixed(2)}
+                  </div>
+                </div>
+                <div className="row user-total-tax">
+                  <div><strong>Your Share (with tax)</strong></div>
+                  <div><strong>{(userShare + userTaxShare).toFixed(2)}</strong></div>
+                </div >
+              </>
+            ) : null
+          }
+
         </div>
         {
           claimError ? (

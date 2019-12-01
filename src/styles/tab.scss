@@ -70,10 +70,12 @@
       margin-top: 10px;
     }
 
-    .selected-total {
-      div:nth-of-type(2){
-        text-align: right;
-      }
+    .row.user-total-no-tax {
+      margin-top: 20px;
+    }
+
+    .row.user-tax {
+      color: $grey;
     }
   }
 }
