@@ -62,7 +62,7 @@ class NewTab extends React.Component {
       this.setState({ creatingTab: true })
       const data = await Api.uploadReceipt(name, photo)
       const { code } = data
-      navigate(`/tab?shortcode=${code}`)
+      navigate(`/tab?shortcode=${code}&name=${name}`)
     } catch (error) {
       this.setState({
         error: `Oops, an error occurred when uploading that receipt`,

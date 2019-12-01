@@ -1,9 +1,40 @@
+@import './core.scss';
+
 .container {
   padding: 10px;
+  text-align: center;
 
   #waitingGif {
     max-width: 80%;
     max-height: 300px;
-    margin: 0 auto;
+    margin-top: 40px
   }
+
+  .other-users {
+    margin-top: 20px;
+  }
+
+  .unclaimed-items {
+    h1 {
+      font-weight: 300;
+      font-size: 1.5em;
+      margin-bottom: 0;
+    }
+
+    .item-row {
+      padding: 10px;
+    }
+
+    .item-row:nth-of-type(2n) {
+      background-color: $light-grey;
+    }
+  }
+}
+
+.success-screen {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

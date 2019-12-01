@@ -33,6 +33,10 @@
           color: $grey;
         }
       }
+
+      .item-info>div:nth-of-type(1){
+        text-align: left;
+      }
     }
   
     .item-row:nth-of-type(2n) {
