@@ -3,6 +3,7 @@ import { navigate } from "gatsby"
 import classnames from 'classnames'
 import queryString from 'query-string'
 
+import MobileLayout from '../components/MobileLayout'
 import { PrimaryButton } from '../components/buttons'
 import { ErrorMessage } from '../components/typography'
 import { Api, Timestamp } from '../lib'
@@ -94,7 +95,7 @@ class Tab extends React.Component {
       description = subItems.filter(({ lineTotal }) => lineTotal === 0).map(({ desc }) => desc)
       // addOns = subItems.filter(({ lineTotal }) => lineTotal > 0)
     }
-    
+
     let cb = this.toggleSelect(index)
     let badge = ''
     let priceTag = price;
@@ -165,80 +166,82 @@ class Tab extends React.Component {
       ) / 100 : 0
     const showCharges = userShare > 0 && charges.length > 0
 
-    const {quantitySelecting, quantityMax, quantityCur} = this.state
+    const { quantitySelecting, quantityMax, quantityCur } = this.state
 
     return (
-      <div className="view-tab">
-        <QuantitySelect 
-          visible={quantitySelecting != null}
-          maxQuantity={quantityMax}
-          curQuantity={quantityCur}
-          onQuantitySelect={this.selectQuantity}
-          onCancel={this.cancelQuantity} />
-        <h1 id="placeName">{place}</h1>
-        <h2 id="tabTime">{Timestamp.fromNow(date)}</h2>
-        <h3 id="tabCode">Code: {this.state.code}</h3>
-        <div className="item-table">
-          {items.map(this.renderItem)}
-        </div>
-        <div className="totals">
-          <hr id="totals-divider" />
-          <div className="row tab-total">
-            <div>Tab Total</div>
-            <div>{tabTotal}</div>
+      <MobileLayout id="view-tab">
+        <div className="container">
+          <QuantitySelect
+            visible={quantitySelecting != null}
+            maxQuantity={quantityMax}
+            curQuantity={quantityCur}
+            onQuantitySelect={this.selectQuantity}
+            onCancel={this.cancelQuantity} />
+          <h1 id="placeName">{place}</h1>
+          <h2 id="tabTime">{Timestamp.fromNow(date)}</h2>
+          <h3 id="tabCode">Code: {this.state.code}</h3>
+          <div className="item-table">
+            {items.map(this.renderItem)}
           </div>
-          <div className="row user-total-no-tax">
-            <div>Your Share{showCharges ? ` (w/o tax)` : null}</div>
-            <div>{userShare.toFixed(2)}</div>
-          </div >
-          {
-            showCharges ? (
-              <>
-                <div className="row user-tax">
-                  <div>Taxes &amp; additional charges  (+{chargesString})</div>
-                  <div className="tax">
-                    {userTaxShare.toFixed(2)}
+          <div className="totals">
+            <hr id="totals-divider" />
+            <div className="row tab-total">
+              <div>Tab Total</div>
+              <div>{tabTotal}</div>
+            </div>
+            <div className="row user-total-no-tax">
+              <div>Your Share{showCharges ? ` (w/o tax)` : null}</div>
+              <div>{userShare.toFixed(2)}</div>
+            </div >
+            {
+              showCharges ? (
+                <>
+                  <div className="row user-tax">
+                    <div>Taxes &amp; additional charges  (+{chargesString})</div>
+                    <div className="tax">
+                      {userTaxShare.toFixed(2)}
+                    </div>
                   </div>
-                </div>
-                <div className="row user-total-tax">
-                  <div><strong>Your Share (with tax)</strong></div>
-                  <div><strong>{(userShare + userTaxShare).toFixed(2)}</strong></div>
-                </div >
-              </>
+                  <div className="row user-total-tax">
+                    <div><strong>Your Share (with tax)</strong></div>
+                    <div><strong>{(userShare + userTaxShare).toFixed(2)}</strong></div>
+                  </div >
+                </>
+              ) : null
+            }
+
+          </div>
+          {
+            claimError ? (
+              <ErrorMessage>
+                {claimError}
+              </ErrorMessage>
             ) : null
           }
-
         </div>
-        {
-          claimError ? (
-            <ErrorMessage>
-              {claimError}
-            </ErrorMessage>
-          ) : null
-        }
         <PrimaryButton
           onClick={this.claimItems}
           isLoading={claimingItems}
         >
           NEXT
         </PrimaryButton>
-      </div >
+      </MobileLayout >
     )
   }
 }
 
-const QuantitySelect = ({visible, onQuantitySelect, maxQuantity, curQuantity, onCancel}) => {
+const QuantitySelect = ({ visible, onQuantitySelect, maxQuantity, curQuantity, onCancel }) => {
   let selects = []
   for (let i = 0; i <= maxQuantity; i++) {
     selects.push(
       <div
-        className={classnames('item-row', {selected: curQuantity === i})}
-        onClick={() => {onQuantitySelect(i)}}>
-          {i}
+        className={classnames('item-row', { selected: curQuantity === i })}
+        onClick={() => { onQuantitySelect(i) }}>
+        {i}
       </div>
     )
   }
-  return (<div className={classnames("modal", {active: visible})} onClick={onCancel}>
+  return (<div className={classnames("modal", { active: visible })} onClick={onCancel}>
     <div className="modal-body" onClick={(e) => e.stopPropagation()}>
       <h3>How many?</h3>
       <div className='item-table'>

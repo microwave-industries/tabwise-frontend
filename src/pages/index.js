@@ -82,6 +82,7 @@ class StartPage extends React.Component {
             onClick={this.joinTab}
             isLoading={isJoining}
             loadingText="JOINING..."
+            style={{ marginTop: 20 }}
           >
             JOIN
         </PrimaryButton>
