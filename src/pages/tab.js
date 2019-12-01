@@ -61,7 +61,7 @@ class Tab extends React.Component {
       this.setState({ claimError: `Oops, could not claim items`, claimingItems: false })
     }
   }
-  renderItem = ({ desc, price, subItems }, index) => {
+  renderItem = ({ desc, price, subItems, lineTotal }, index) => {
     let description = [], addOns = []
     if (subItems && subItems.length > 0) {
       // determine if subitem is description (no additional charge) or add-on (with price)
@@ -83,7 +83,7 @@ class Tab extends React.Component {
               </p>
             ) : null}
           </div>
-          <div>{price}</div>
+          <div>{price ? price : lineTotal}</div>
         </div>
       </div>
     )
@@ -108,19 +108,31 @@ class Tab extends React.Component {
       )
     }
 
-    const { items, place, date, total: tabTotal } = tab
+    const { items, place, date, total: tabTotal, charges } = tab
     const { selectedItems, claimError } = this.state
+
+    const untaxedTotal = tabTotal - charges.map(x => x.amount).reduce((x, y) => x + y, 0)
 
     const userShare = selectedItems.length > 0
       ? items
         .filter((v, i) => selectedItems.includes(i))
-        .reduce((prev, current) => ({ lineTotal: prev.lineTotal + current.lineTotal })).lineTotal
-        .toFixed(2)
+        .map(i => i.lineTotal)
+        .reduce((prev, current) => prev + current, 0)
       : 0
-    const unaccountedFor = (tabTotal - userShare).toFixed(2)
+    const chargesString = charges.map(c => `${c.percentage}%`).join(`+`)
+    const userTaxedShare = selectedItems.length > 0
+      ? Math.round(
+        (
+          userShare
+          + charges
+            .map(x => (Math.round(100 * x.amount * (userShare / untaxedTotal)) / 100))
+            .reduce((x, y) => x + y, 0)
+        ) * 100
+      ) / 100 : 0
+    const showCharges = userShare > 0 && charges.length > 0
 
     return (
-      <div className="container">
+      <div className="view-tab">
         <h1 id="placeName">{place}</h1>
         <h2 id="tabTime">{Timestamp.fromNow(date)}</h2>
         <div className="item-table">
@@ -134,12 +146,21 @@ class Tab extends React.Component {
           </div>
           <div className="row selected-total">
             <div>Your Share</div>
-            <div>{userShare}</div>
-          </div>
-          <div className="row unaccounted-total">
-            <div>Unaccounted For</div>
-            <div>{unaccountedFor}</div>
-          </div>
+            <div>
+              <span style={{
+                color: showCharges ? `#718093` : `#000`
+              }}>
+                {userShare.toFixed(2)}
+              </span>
+              {
+                showCharges ? (
+                  <div className="tax">
+                    (+{chargesString}) {userTaxedShare}
+                  </div>
+                ) : null
+              }
+            </div>
+          </div >
         </div>
         {
           claimError ? (
@@ -154,7 +175,7 @@ class Tab extends React.Component {
         >
           NEXT
         </PrimaryButton>
-      </div>
+      </div >
     )
   }
 }

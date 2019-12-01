@@ -23,11 +23,11 @@ const CreateButton = styled.div({
 })
 
 const cleanShortcode = shortcode => {
-  if (shortcode.indexOf(`-`) !== `-1`) {
-    return shortcode.split(`-`).join(``).toLowerCase()
-  } else if (shortcode.indexOf(` `) !== `-1`) {
-    return shortcode.split(` `).join(``).toLowerCase()
-  }
+  // if (shortcode.indexOf(`-`) !== `-1`) {
+  //   return shortcode.split(`-`).join(``).toLowerCase()
+  // } else if (shortcode.indexOf(` `) !== `-1`) {
+  //   return shortcode.split(` `).join(``).toLowerCase()
+  // }
   return shortcode.toLowerCase()
 }
 

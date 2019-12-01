@@ -52,7 +52,7 @@ class PendingPage extends React.Component {
       )
     }
     return (
-      <div className="container">
+      <div className="pending">
         <video id="waitingGif" autoplay="autoplay" loop="loop" muted>
           <source src="https://media.giphy.com/media/tXL4FHPSnVJ0A/giphy.mp4" type="video/mp4" />
         </video>
