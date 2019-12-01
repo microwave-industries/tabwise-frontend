@@ -12,6 +12,7 @@ class PendingPage extends React.Component {
   constructor() {
     super()
     this.state = {
+      code: null,
       unclaimedItems: [],
       users: []
     }
@@ -21,12 +22,13 @@ class PendingPage extends React.Component {
   }
   updateData = async () => {
     try {
-      const { items, users, diff, complete } = await Api.updateRoom()
+      const { items, users, diff, complete, code } = await Api.updateRoom()
       if (complete) {
         window.clearInterval(this.updater)
         navigate(`/pay`)
       }
       this.setState({
+        code,
         unclaimedItems: diff.map(d => ({ ...items[d] })),
         items,
         users,
@@ -45,7 +47,7 @@ class PendingPage extends React.Component {
     )
   }
   render() {
-    const { unclaimedItems, users } = this.state
+    const { unclaimedItems, users, code } = this.state
     if (unclaimedItems.length === 0) {
       return (
         <MobileLayout id="success-screen">
@@ -57,6 +59,7 @@ class PendingPage extends React.Component {
       <MobileLayout id="pending-view">
         <SEO title="Pending Tab" />
         <div className="container">
+          <p id="code">Code: {code}</p>
           <video id="waitingGif" autoplay="autoplay" loop="loop" muted>
             <source src="https://media.giphy.com/media/tXL4FHPSnVJ0A/giphy.mp4" type="video/mp4" />
           </video>
@@ -71,6 +74,7 @@ class PendingPage extends React.Component {
             <h1>Unclaimed Items</h1>
             {unclaimedItems.map(this.renderItemRow)}
           </div>
+          <div style={{ height: 40 }} />
         </div>
         <PrimaryButton onClick={this.goBack}>
           BACK
