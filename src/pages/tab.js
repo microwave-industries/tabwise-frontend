@@ -3,6 +3,7 @@ import { navigate } from "gatsby"
 import classnames from 'classnames'
 
 import SEO from '../components/seo'
+import { AvatarList } from '../components/avatars'
 import MobileLayout from '../components/MobileLayout'
 import { PrimaryButton } from '../components/buttons'
 import { ErrorMessage } from '../components/typography'
@@ -39,6 +40,8 @@ class Tab extends React.Component {
       this.setState({
         tab,
         code,
+        users,
+        token
       })
     } catch (error) {
       this.setState({ error: `Oops, could not fetch tab` })
@@ -102,21 +105,28 @@ class Tab extends React.Component {
       // addOns = subItems.filter(({ lineTotal }) => lineTotal > 0)
     }
 
+    const { selectedItems, users, token } = this.state
+
     let cb = this.toggleSelect(index)
     let badge = ''
     let priceTag = price;
     if (qty > 1) {
       cb = this.openQuantitySelector(index, qty)
-      const selectedCount = this.state.selectedItems.filter(x => x === index).length
+      const selectedCount = selectedItems.filter(x => x === index).length
       if (selectedCount > 0) {
         badge = ` (x${selectedCount})`
         priceTag = price * selectedCount;
       }
     }
 
+    const usersSelecting = users
+      .filter(({ uid }) => uid !== token)
+      .filter(({ items }) => items && items.includes(index))
+      .map(({ name }) => name)
+
     return (
       <div
-        className={classnames("item-row", { selected: this.state.selectedItems.includes(index) })}
+        className={classnames("item-row", { selected: selectedItems.includes(index) })}
         onClick={cb}
         key={index}
       >
@@ -128,6 +138,7 @@ class Tab extends React.Component {
                 {d}
               </p>
             ) : null}
+            <AvatarList users={usersSelecting} style={{ marginTop: 10 }} />
           </div>
           <div>{priceTag ? priceTag.toFixed(2) : lineTotal.toFixed(2)}</div>
         </div>
@@ -225,6 +236,7 @@ class Tab extends React.Component {
               </ErrorMessage>
             ) : null
           }
+          <div style={{ height: 40 }} />
         </div>
         <PrimaryButton
           onClick={this.claimItems}
