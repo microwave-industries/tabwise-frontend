@@ -1,8 +1,16 @@
 @import './core.scss';
 
-.pending {
-  padding: 10px;
-  text-align: center;
+#pending-view {
+  display: flex;
+  flex-direction: column;
+
+  .container {
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: center;
 
   #waitingGif {
     max-width: 80%;
@@ -29,11 +37,10 @@
       background-color: $light-grey;
     }
   }
+  }
 }
 
-.success-screen {
-  width: 100vw;
-  height: 100vh;
+#success-screen {
   display: flex;
   justify-content: center;
   align-items: center;

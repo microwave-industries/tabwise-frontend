@@ -2,6 +2,7 @@ import React from 'react'
 import { navigate } from "gatsby"
 import { CheckCircle } from 'react-feather'
 import { Api } from '../lib'
+import MobileLayout from '../components/MobileLayout'
 import { PrimaryButton } from '../components/buttons'
 
 import '../styles/pending.scss'
@@ -46,31 +47,33 @@ class PendingPage extends React.Component {
     const { unclaimedItems, users } = this.state
     if (unclaimedItems.length === 0) {
       return (
-        <div className="success-screen">
+        <MobileLayout id="success-screen">
           <CheckCircle size={60} color={`#192a56`} />
-        </div>
+        </MobileLayout>
       )
     }
     return (
-      <div className="pending">
-        <video id="waitingGif" autoplay="autoplay" loop="loop" muted>
-          <source src="https://media.giphy.com/media/tXL4FHPSnVJ0A/giphy.mp4" type="video/mp4" />
-        </video>
-        <div className="other-users">
-          {
-            users.length === 1
-              ? `you're the only one here`
-              : users.map(({ name }) => name).join(`, `)
-          }
-        </div>
-        <div className="unclaimed-items">
-          <h1>Unclaimed Items</h1>
-          {unclaimedItems.map(this.renderItemRow)}
+      <MobileLayout id="pending-view">
+        <div className="container">
+          <video id="waitingGif" autoplay="autoplay" loop="loop" muted>
+            <source src="https://media.giphy.com/media/tXL4FHPSnVJ0A/giphy.mp4" type="video/mp4" />
+          </video>
+          <div className="other-users">
+            {
+              users.length === 1
+                ? `you're the only one here`
+                : users.map(({ name }) => name).join(`, `)
+            }
+          </div>
+          <div className="unclaimed-items">
+            <h1>Unclaimed Items</h1>
+            {unclaimedItems.map(this.renderItemRow)}
+          </div>
         </div>
         <PrimaryButton onClick={this.goBack}>
           BACK
         </PrimaryButton>
-      </div>
+      </MobileLayout>
     )
   }
 }
