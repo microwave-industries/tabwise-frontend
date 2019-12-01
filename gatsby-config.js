@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
     title: `TabWise`,
-    description: `See it, Say it, Split it.`,
+    description: `Scan it, Say it, Split it.`,
     author: `TabWise`,
   },
   plugins: [
@@ -18,13 +18,13 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
+        name: `TabWise - Scan it, Say it, Split it`,
+        short_name: `TabWise`,
         start_url: `/`,
-        background_color: `#663399`,
-        theme_color: `#663399`,
-        display: `minimal-ui`,
-        icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
+        background_color: `#273c75`,
+        theme_color: `#273c75`,
+        display: `standalone`,
+        icon: `src/images/logo.png`, // This path is relative to the root of the site.
       },
     },
     `gatsby-plugin-sass`,

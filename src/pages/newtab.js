@@ -2,6 +2,7 @@ import React from 'react'
 import { navigate } from "gatsby"
 import styled from 'styled-components'
 import { Camera, CheckCircle } from 'react-feather'
+import SEO from '../components/seo'
 import MobileLayout from '../components/MobileLayout'
 import { PrimaryButton } from '../components/buttons'
 import { MinimalTextInput } from '../components/inputs'
@@ -69,6 +70,7 @@ class NewTab extends React.Component {
     const { paymentUrl, photo, error, creatingTab } = this.state
     return (
       <MobileLayout id="new-tab">
+        <SEO title="New Tab" />
         <div className="container">
           <MinimalTextInput
             style={{ fontSize: `1.5em` }}
@@ -94,7 +96,7 @@ class NewTab extends React.Component {
                     <>
                       <img
                         src={URL.createObjectURL(photo)}
-                        style={{ maxWidth: `80%`, maxHeight: `200px`, marginBottom: 20 }}
+                        style={{ maxWidth: `80%`, maxHeight: `300px`, marginBottom: 20 }}
                         alt="receipt preview"
                       />
                       <CheckCircle size={40} color="#218c74" />
@@ -105,7 +107,6 @@ class NewTab extends React.Component {
                 id="photoUpload"
                 type="file"
                 accept="image/*"
-                // capture="camera"
                 ref={this.fileInput}
                 onChange={this.onSelectPhoto}
               />

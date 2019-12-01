@@ -88,7 +88,7 @@ class StartPage extends React.Component {
         </PrimaryButton>
           <div className="create-tab">
             <Link
-              to="/new"
+              to="/newtab"
             >
               start a tab
           </Link>
