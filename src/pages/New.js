@@ -60,13 +60,7 @@ class NewTab extends React.Component {
     }
     try {
       this.setState({ creatingTab: true })
-      const [
-        data,
-        { code }
-      ] = await Promise.all([
-        Api.setPaymentURL(paymentUrl),
-        Api.uploadReceipt(photo)
-      ])
+      const { code } = await Api.uploadReceipt(photo, paymentUrl)
       navigate(`/tab?shortcode=${code}`)
     } catch (error) {
       this.setState({

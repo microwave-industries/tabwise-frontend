@@ -5,9 +5,10 @@ const api = axios.create({
   withCredentials: true
 })
 
-const uploadReceipt = async (receiptPhoto) => {
+const uploadReceipt = async (receiptPhoto, paymentUrl) => {
   const formData = new FormData()
   formData.append('file', receiptPhoto)
+  formData.append('paymentUrl', paymentUrl)
 
   try {
     const { data } = await api.post(`/receipt/upload`, formData)
