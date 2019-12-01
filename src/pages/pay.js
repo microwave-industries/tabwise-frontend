@@ -53,12 +53,14 @@ class PayPage extends React.Component {
         </div>
       )
     }
+
+    const name = url.split("/")[3].replace(new RegExp(`([a-z])([A-Z][a-z])`), `$1 $2`)
     return (
       <MobileLayout id="view-pay">
         <div className="container">
-          <h1 id="pageTitle">Payment</h1>
-          <h2 className="subtitle">to: {url.split("/")[3]}</h2>
-          <h3 id="amount">Amount: {subTotal.toFixed(2)}</h3>
+          <h1 id="pageTitle">
+            Pay <u>£{subTotal.toFixed(2)}</u> <br />to <br /><strong>{name}</strong>
+          </h1>
         </div>
         <PrimaryButton
           onClick={this.payNow}
