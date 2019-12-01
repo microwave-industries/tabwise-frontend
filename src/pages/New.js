@@ -43,7 +43,7 @@ class NewTab extends React.Component {
   constructor() {
     super()
     this.state = {
-      name: ``,
+      paymentUrl: ``,
       photo: null,
       error: null,
       creatingTab: false,
@@ -51,18 +51,23 @@ class NewTab extends React.Component {
   }
   openCamera = () => document.getElementById(`photoUpload`).click()
   onSelectPhoto = (e) => this.setState({ photo: e.target.files[0] })
-  onChangeName = ({ target: { value } }) => this.setState({ name: value })
+  onChange = key => ({ target: { value } }) => this.setState({ [key]: value })
 
   createTab = async () => {
-    const { name, photo } = this.state
-    if (name.length === 0 || photo === null) {
+    const { paymentUrl, photo } = this.state
+    if (paymentUrl.length === 0 || photo === null) {
       this.setState({ error: `Ensure all fields are filled` })
     }
     try {
       this.setState({ creatingTab: true })
-      const data = await Api.uploadReceipt(name, photo)
-      const { code } = data
-      navigate(`/tab?shortcode=${code}&name=${name}`)
+      const [
+        data,
+        { code }
+      ] = await Promise.all([
+        Api.setPaymentURL(paymentUrl),
+        Api.uploadReceipt(photo)
+      ])
+      navigate(`/tab?shortcode=${code}`)
     } catch (error) {
       this.setState({
         error: `Oops, an error occurred when uploading that receipt`,
@@ -72,13 +77,13 @@ class NewTab extends React.Component {
   }
 
   render() {
-    const { name, photo, error, creatingTab } = this.state
+    const { paymentUrl, photo, error, creatingTab } = this.state
     return (
       <Container>
         <MinimalTextInput
-          placeholder="Your Name"
-          value={name}
-          onChange={this.onChangeName}
+          placeholder="Monzo/Starling URL"
+          value={paymentUrl}
+          onChange={this.onChange(`paymentUrl`)}
         />
         <UploadContainer
           onClick={this.openCamera}

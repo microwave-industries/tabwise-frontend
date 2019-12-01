@@ -5,10 +5,9 @@ const api = axios.create({
   withCredentials: true
 })
 
-const uploadReceipt = async (name, receiptPhoto) => {
+const uploadReceipt = async (receiptPhoto) => {
   const formData = new FormData()
   formData.append('file', receiptPhoto)
-  formData.append('name', name)
 
   try {
     const { data } = await api.post(`/receipt/upload`, formData)
@@ -60,6 +59,24 @@ const updateRoom = async () => {
     } else {
       throw new Error(`Could not fetch updates for room: ${JSON.stringify(data)}`)
     }
+  } catch (error) {
+    throw error
+  }
+}
+
+const setPaymentURL = async (paymentURL) => {
+  try {
+    const { data } = await api.put(`/claim/details?paymanetUrl=${paymentURL}`)
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+const getPaymentLink = async (amount, description) => {
+  try {
+    const { data } = await api.get(`/claim/pay?amount=${amount}&description=${description}`)
+    return data
   } catch (error) {
     throw error
   }
