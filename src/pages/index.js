@@ -1,6 +1,7 @@
 import React from "react"
 import SEO from '../components/seo'
 
+import MobileLayout from '../components/MobileLayout'
 import { PrimaryButton, Link } from '../components/buttons'
 import { TextInput } from '../components/inputs'
 import { ErrorMessage } from '../components/typography'
@@ -49,7 +50,7 @@ class StartPage extends React.Component {
     const { shortcode, userName, isJoining, error } = this.state
     const cleanCode = cleanShortcode(shortcode)
     return (
-      <div id="start-page">
+      <MobileLayout id="start-page">
         <div className="container">
           <SEO title="Welcome" />
           <div id="app-name">
@@ -92,7 +93,7 @@ class StartPage extends React.Component {
           </Link>
           </div>
         </div>
-      </div>
+      </MobileLayout>
     )
   }
 }
