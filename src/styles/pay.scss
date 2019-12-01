@@ -1,0 +1,27 @@
+@import './core.scss';
+
+.view-pay {
+  padding: 10px;
+
+  #pageTitle {
+    font-weight: 300;
+    margin-bottom: 0;
+  }
+
+  #to {
+    font-weight: 300;
+    color: $grey;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  
+  #amount {
+      font-weight: 300;
+      margin-bottom: 10px;
+  }
+  
+  #url {
+      font-weight: 300;
+      margin-bottom: 10px;
+  }
+}
