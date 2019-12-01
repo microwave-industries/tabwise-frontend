@@ -13,6 +13,7 @@ class Tab extends React.Component {
   constructor() {
     super()
     this.state = {
+      code: null,
       tab: null,
       error: null,
       selectedItems: [],
@@ -24,11 +25,11 @@ class Tab extends React.Component {
     this.fetchTab()
   }
   fetchTab = async () => {
-    const { location: { search } } = this.props
-    const { shortcode, name } = queryString.parse(search)
+    // const { location: { search } } = this.props
+    // const { name } = queryString.parse(search)
     try {
-      const { success, token, ...tab } = await Api.joinTab(name, shortcode)
-      this.setState({ tab })
+      const { success, token, code, ...tab } = await Api.updateRoom()
+      this.setState({ tab, code })
     } catch (error) {
       this.setState({ error: `Oops, could not fetch tab` })
     }
@@ -94,7 +95,7 @@ class Tab extends React.Component {
 
     if (error !== null) {
       return (
-        <div className="container">
+        <div className="view-tab">
           <h1>{error}.</h1>
         </div>
       )
@@ -102,7 +103,7 @@ class Tab extends React.Component {
 
     if (tab === null) {
       return (
-        <div className="container">
+        <div className="view-tab">
           <h1>Loading...</h1>
         </div>
       )

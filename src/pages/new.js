@@ -9,7 +9,7 @@ import { ErrorMessage } from '../components/typography'
 import Api from '../lib/Api'
 
 const Container = styled.div({
-  padding: 10,
+  padding: 20,
 })
 
 const UploadContainer = styled.div({
@@ -53,6 +53,13 @@ class NewTab extends React.Component {
   onSelectPhoto = (e) => this.setState({ photo: e.target.files[0] })
   onChange = key => ({ target: { value } }) => this.setState({ [key]: value })
 
+  componentDidMount() {
+    const paymentUrl = localStorage.getItem(`paymentUrl`)
+    if (typeof paymentUrl === `string` && paymentUrl.length > 0) {
+      this.setState({ paymentUrl })
+    }
+  }
+
   createTab = async () => {
     const { paymentUrl, photo } = this.state
     if (paymentUrl.length === 0 || photo === null) {
@@ -61,6 +68,7 @@ class NewTab extends React.Component {
     try {
       this.setState({ creatingTab: true })
       const { code } = await Api.uploadReceipt(photo, paymentUrl)
+      localStorage.setItem(`paymentUrl`, paymentUrl)
       navigate(`/tab?shortcode=${code}`)
     } catch (error) {
       this.setState({
@@ -120,7 +128,11 @@ class NewTab extends React.Component {
             </ErrorMessage>
           ) : null
         }
-        <PrimaryButton onClick={this.createTab} isLoading={creatingTab}>
+        <PrimaryButton
+          onClick={this.createTab}
+          isLoading={creatingTab}
+          loadingText="PROCESSING..."
+        >
           NEXT
         </PrimaryButton>
       </Container>
