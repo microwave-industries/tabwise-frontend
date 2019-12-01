@@ -67,7 +67,7 @@ const updateRoom = async () => {
 
 const setPaymentURL = async (paymentURL) => {
   try {
-    const { data } = await api.put(`/claim/details?paymanetUrl=${paymentURL}`)
+    const { data } = await api.put(`/claim/details?paymentUrl=${paymentURL}`)
     return data
   } catch (error) {
     throw error

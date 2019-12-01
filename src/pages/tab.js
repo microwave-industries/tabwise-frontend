@@ -13,6 +13,7 @@ class Tab extends React.Component {
   constructor() {
     super()
     this.state = {
+      code: null,
       tab: null,
       error: null,
       selectedItems: [],
@@ -27,11 +28,11 @@ class Tab extends React.Component {
     this.fetchTab()
   }
   fetchTab = async () => {
-    const { location: { search } } = this.props
-    const { shortcode, name } = queryString.parse(search)
+    // const { location: { search } } = this.props
+    // const { name } = queryString.parse(search)
     try {
-      const { success, token, ...tab } = await Api.joinTab(name, shortcode)
-      this.setState({ tab })
+      const { success, token, code, ...tab } = await Api.updateRoom()
+      this.setState({ tab, code })
     } catch (error) {
       this.setState({ error: `Oops, could not fetch tab` })
     }
@@ -121,7 +122,7 @@ class Tab extends React.Component {
               </p>
             ) : null}
           </div>
-          <div>{priceTag ? priceTag : lineTotal}</div>
+          <div>{priceTag ? priceTag.toFixed(2) : lineTotal.toFixed(2)}</div>
         </div>
       </div>
     )
@@ -131,7 +132,7 @@ class Tab extends React.Component {
 
     if (error !== null) {
       return (
-        <div className="container">
+        <div className="view-tab">
           <h1>{error}.</h1>
         </div>
       )
@@ -139,7 +140,7 @@ class Tab extends React.Component {
 
     if (tab === null) {
       return (
-        <div className="container">
+        <div className="view-tab">
           <h1>Loading...</h1>
         </div>
       )
@@ -153,12 +154,11 @@ class Tab extends React.Component {
     const userShare = selectedItems.length > 0
       ? selectedItems.map(x => items[x].price).reduce((x, y) => x + y, 0)
       : 0
-    const chargesString = charges.map(c => `${c.percentage}%`).join(`+`)
-    const userTaxedShare = selectedItems.length > 0
+    const chargesString = charges.map(c => `${c.percentage.toFixed(2)}%`).join(`+`)
+    const userTaxShare = selectedItems.length > 0
       ? Math.round(
         (
-          userShare
-          + charges
+          charges
             .map(x => (Math.round(100 * x.amount * (userShare / untaxedTotal)) / 100))
             .reduce((x, y) => x + y, 0)
         ) * 100
@@ -186,23 +186,27 @@ class Tab extends React.Component {
             <div>Tab Total</div>
             <div>{tabTotal}</div>
           </div>
-          <div className="row selected-total">
-            <div>Your Share</div>
-            <div>
-              <span style={{
-                color: showCharges ? `#718093` : `#000`
-              }}>
-                {userShare.toFixed(2)}
-              </span>
-              {
-                showCharges ? (
-                  <div className="tax">
-                    (+{chargesString}) {userTaxedShare}
-                  </div>
-                ) : null
-              }
-            </div>
+          <div className="row user-total-no-tax">
+            <div>Your Share{showCharges ? ` (w/o tax)` : null}</div>
+            <div>{userShare.toFixed(2)}</div>
           </div >
+          {
+            showCharges ? (
+              <>
+                <div className="row user-tax">
+                  <div>Taxes &amp; additional charges  (+{chargesString})</div>
+                  <div className="tax">
+                    {userTaxShare.toFixed(2)}
+                  </div>
+                </div>
+                <div className="row user-total-tax">
+                  <div><strong>Your Share (with tax)</strong></div>
+                  <div><strong>{(userShare + userTaxShare).toFixed(2)}</strong></div>
+                </div >
+              </>
+            ) : null
+          }
+
         </div>
         {
           claimError ? (
