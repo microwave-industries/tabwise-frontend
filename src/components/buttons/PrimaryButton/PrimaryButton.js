@@ -13,6 +13,10 @@ const Btn = styled.div({
   textAlign: `center`,
 })
 
+const LoadingBtn = styled(Btn)({
+  backgroundColor: `#273c75`,
+})
+
 class PrimaryButton extends React.Component {
   onClick = () => {
     const { to, onClick } = this.props
@@ -23,7 +27,10 @@ class PrimaryButton extends React.Component {
     }
   }
   render() {
-    const { children } = this.props
+    const { children, isLoading, loadingText = `Loading...` } = this.props
+    if (isLoading) {
+      return <LoadingBtn>{loadingText}</LoadingBtn>
+    }
     return (
       <Btn onClick={this.onClick}>{children}</Btn>
     )

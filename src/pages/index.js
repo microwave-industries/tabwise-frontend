@@ -36,7 +36,7 @@ class StartPage extends React.Component {
     super()
     this.state = {
       shortcode: ``,
-      userName: ``
+      userName: ``,
     }
   }
   onChange = key => ({ target: { value } }) => this.setState({ [key]: value })
@@ -61,7 +61,7 @@ class StartPage extends React.Component {
           style={{ fontSize: `1.6em` }}
         />
         <PrimaryButton
-          to={`/tab?shortcode=${cleanCode}`}
+          to={`/tab?shortcode=${cleanCode}&name=${userName}`}
         >
           JOIN
         </PrimaryButton>

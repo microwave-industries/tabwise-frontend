@@ -45,7 +45,8 @@ class NewTab extends React.Component {
     this.state = {
       name: ``,
       photo: null,
-      error: null
+      error: null,
+      creatingTab: false,
     }
   }
   openCamera = () => document.getElementById(`photoUpload`).click()
@@ -58,16 +59,20 @@ class NewTab extends React.Component {
       this.setState({ error: `Ensure all fields are filled` })
     }
     try {
+      this.setState({ creatingTab: true })
       const data = await Api.uploadReceipt(name, photo)
       const { code } = data
       navigate(`/tab?shortcode=${code}`)
     } catch (error) {
-      this.setState({ error: `Oops, an error occurred when uploading that receipt` })
+      this.setState({
+        error: `Oops, an error occurred when uploading that receipt`,
+        creatingTab: false
+      })
     }
   }
 
   render() {
-    const { name, photo, error } = this.state
+    const { name, photo, error, creatingTab } = this.state
     return (
       <Container>
         <MinimalTextInput
@@ -116,7 +121,7 @@ class NewTab extends React.Component {
             </ErrorMessage>
           ) : null
         }
-        <PrimaryButton onClick={this.createTab}>
+        <PrimaryButton onClick={this.createTab} isLoading={creatingTab}>
           NEXT
         </PrimaryButton>
       </Container>

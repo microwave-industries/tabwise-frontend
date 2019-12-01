@@ -1,29 +1,12 @@
 import React from 'react'
 import classnames from 'classnames'
-import { PrimaryButton } from '../components/buttons'
 import queryString from 'query-string'
 
+import { PrimaryButton } from '../components/buttons'
+import { ErrorMessage } from '../components/typography'
 import { Api, Timestamp } from '../lib'
 
 import '../styles/tab.scss'
-
-const SAMPLE_ITEMS = [
-  {
-    qty: 1,
-    name: `Apple Strudel`,
-    amount: 5
-  },
-  {
-    qty: 1,
-    name: `Banana Cheesecake`,
-    amount: 12
-  },
-  {
-    qty: `1`,
-    name: `Ice Cream`,
-    amount: 4
-  }
-]
 
 class Tab extends React.Component {
   constructor() {
@@ -31,7 +14,9 @@ class Tab extends React.Component {
     this.state = {
       tab: null,
       error: null,
-      selectedItems: []
+      selectedItems: [],
+      claimingItems: false,
+      claimError: null
     }
   }
   componentDidMount() {
@@ -39,9 +24,9 @@ class Tab extends React.Component {
   }
   fetchTab = async () => {
     const { location: { search } } = this.props
-    const { shortcode } = queryString.parse(search)
+    const { shortcode, name } = queryString.parse(search)
     try {
-      const { success, token, ...tab } = await Api.joinTab(`Huey`, shortcode)
+      const { success, token, ...tab } = await Api.joinTab(name, shortcode)
       this.setState({ tab })
     } catch (error) {
       this.setState({ error: `Oops, could not fetch tab` })
@@ -59,12 +44,28 @@ class Tab extends React.Component {
       })
     }
   }
+  claimItems = async () => {
+    const { selectedItems } = this.state
+    if (selectedItems.length === 0) {
+      if (!window.confirm("Are you sure you want to proceed? You haven't claimed any items")) {
+        return
+      }
+    }
+    try {
+      this.setState({ claimingItems: true })
+      const data = await Api.claimItems(selectedItems)
+      console.log(data)
+      this.setState({ claimingItems: false })
+    } catch (error) {
+      this.setState({ claimError: `Oops, could not claim items`, claimingItems: false })
+    }
+  }
   renderItem = ({ desc, price, subItems }, index) => {
     let description = [], addOns = []
     if (subItems && subItems.length > 0) {
       // determine if subitem is description (no additional charge) or add-on (with price)
       description = subItems.filter(({ lineTotal }) => lineTotal === 0).map(({ desc }) => desc)
-      addOns = subItems.filter(({ lineTotal }) => lineTotal > 0)
+      // addOns = subItems.filter(({ lineTotal }) => lineTotal > 0)
     }
     return (
       <div
@@ -75,8 +76,8 @@ class Tab extends React.Component {
         <div className="item-info">
           <div>
             {desc}
-            {description.length > 0 ? description.map(d =>
-              <p className="item-description">
+            {description.length > 0 ? description.map((d, i) =>
+              <p className="item-description" key={i}>
                 {d}
               </p>
             ) : null}
@@ -88,7 +89,7 @@ class Tab extends React.Component {
   }
 
   render() {
-    const { tab, error } = this.state
+    const { tab, error, claimingItems } = this.state
 
     if (error !== null) {
       return (
@@ -107,7 +108,7 @@ class Tab extends React.Component {
     }
 
     const { items, place, date, total: tabTotal } = tab
-    const { selectedItems } = this.state
+    const { selectedItems, claimError } = this.state
 
     const userShare = selectedItems.length > 0
       ? items
@@ -139,8 +140,16 @@ class Tab extends React.Component {
             <div>{unaccountedFor}</div>
           </div>
         </div>
+        {
+          claimError ? (
+            <ErrorMessage>
+              {claimError}
+            </ErrorMessage>
+          ) : null
+        }
         <PrimaryButton
-          to="/pending"
+          onClick={this.claimItems}
+          isLoading={claimingItems}
         >
           NEXT
         </PrimaryButton>
