@@ -15,7 +15,7 @@ const cleanShortcode = shortcode => {
   // } else if (shortcode.indexOf(` `) !== `-1`) {
   //   return shortcode.split(` `).join(``).toLowerCase()
   // }
-  return shortcode.toLowerCase()
+    return shortcode.replace(/\s+/g, '-').toLowerCase()
 }
 
 class StartPage extends React.Component {
